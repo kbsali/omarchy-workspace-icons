@@ -15,7 +15,8 @@ collapse to one icon in the bar but each get a row in the panel.
 
 - The focused workspace's number is highlighted and underlined; empty workspaces are dimmed.
 - Click a workspace to focus it.
-- Hover a workspace for a panel listing its windows; click a row to focus that window.
+- Hover a workspace for a panel listing its windows; click a row to focus that window, or
+  middle-click it to ask that window to close.
 - Workspaces 1–5 are always shown; others appear while they have windows.
 
 ## Coding agents (optional)
@@ -23,7 +24,8 @@ collapse to one icon in the bar but each get a row in the panel.
 If [modelctl](https://github.com/tjcelaya/omarchy-modelctl) is installed, the hover panel
 also lists the coding agents running inside each terminal (herdr panes, or a plain terminal
 running claude/opencode/codex…) with their directory and status, and clicking an agent row
-jumps straight to its pane. In the bar, every terminal hosting agents wears one shared
+jumps straight to its pane; middle-clicking it ends the session (a herdr pane is closed, a
+plain process gets SIGTERM). In the bar, every terminal hosting agents wears one shared
 agent-host icon (`agentIcon`) whether the agents run under herdr, tmux, or directly;
 otherwise the bar stays as it is, one icon per window.
 

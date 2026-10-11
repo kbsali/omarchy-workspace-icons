@@ -6,7 +6,7 @@ Usage: wsicons-state [--terminals foot,kitty,...] [--programs 'nvim=,btop=btop']
 Output: {"windows": [{"ws": 1, "address": "0x...", "class": "foot", "title": "...",
                       "program": "herdr", "icon": "foot", "glyph": "",
                       "agents": [{"agent": "claude", "cwd": "~/src/x", "status": "working",
-                                  "pane": "wB:p1", "focus": ["herdr", ...]}]}, ...]}
+                                  "pane": "wB:p1", "focus": ["herdr", ...], "stop": ["herdr", ...]}]}, ...]}
 
 `icon` is an icon-theme name or an absolute path, resolved by the widget the same way the
 launcher resolves desktop-entry icons. `glyph`, when set, is a Nerd Font glyph drawn instead
@@ -14,7 +14,8 @@ of the icon (used for terminal programs that ship no icon).
 
 `agents` lists the coding agents running inside a window when a `modelctl-agents` executable
 is available (on PATH or in the tjcelaya.modelctl plugin folder); its `focus` argv raises the
-agent's pane. Without that tool the list is empty and nothing else changes.
+agent's pane and its `stop` argv ends the session (closes the herdr pane, or SIGTERMs a plain
+process). Without that tool the list is empty and nothing else changes.
 """
 
 import argparse
@@ -213,9 +214,16 @@ def agents_by_window():
             focus = json.loads(fields[6])
         except ValueError:
             focus = []
+        stop = []
+        if len(fields) > 7:
+            try:
+                stop = json.loads(fields[7])
+            except ValueError:
+                stop = []
         agents.setdefault(match.group(1).lower(), []).append({
             "agent": fields[0], "cwd": fields[1], "status": fields[2], "pane": fields[4],
             "focus": focus if isinstance(focus, list) else [],
+            "stop": stop if isinstance(stop, list) else [],
         })
     return agents
 

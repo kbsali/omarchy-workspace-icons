@@ -109,14 +109,14 @@ BarWidget {
       var w = list[i]
       var icon = root.windowIcon(w)
       rows.push({ kind: "window", source: icon.source, glyph: icon.glyph, address: w.address,
-                  title: w.title || w["class"], subtitle: w.program || "" , status: "", focus: [] })
+                  title: w.title || w["class"], subtitle: w.program || "" , status: "", focus: [], stop: [] })
       var agents = w.agents || []
       for (var j = 0; j < agents.length; j++) {
         var a = agents[j]
         var dir = String(a.cwd || "").replace(/\/$/, "").split("/").pop() || a.cwd
         rows.push({ kind: "agent", source: "", glyph: a.status === "working" ? "\uDB81\uDC6E" : "\uDB80\uDD8D",
                     address: "", title: a.agent + " · " + dir, subtitle: [a.cwd, a.status, a.pane].filter(function(x) { return x }).join(" · "),
-                    status: a.status || "", focus: a.focus || [] })
+                    status: a.status || "", focus: a.focus || [], stop: a.stop || [] })
       }
     }
     return rows
@@ -133,6 +133,24 @@ BarWidget {
     else root.focusWindow(row.address)
     root.hoverCell = null
     root.panelCell = null
+  }
+
+  // Ask a window to close; the app may prompt or refuse. Older Hyprland takes the classic dispatcher.
+  function closeWindow(address) {
+    if (!root.bar || !address) return
+    root.bar.run("hyprctl dispatch " + Util.shellQuote("hl.dsp.window.close({ window = \"address:" + address + "\" })")
+      + " >/dev/null 2>&1 || hyprctl dispatch closewindow " + Util.shellQuote("address:" + address))
+  }
+
+  // Middle click ends what a row stands for. An agent row runs the stop argv that modelctl-agents
+  // supplies (its herdr pane is closed, a plain process gets SIGTERM); a window row asks the
+  // window to close. The panel stays open so the row can be watched going away.
+  function closeRow(row) {
+    if (row.kind === "agent") {
+      if (row.stop.length > 0) Quickshell.execDetached(row.stop)
+      return
+    }
+    root.closeWindow(row.address)
   }
 
   function focusWorkspace(id) {
@@ -277,8 +295,12 @@ BarWidget {
               id: rowArea
               anchors.fill: parent
               hoverEnabled: true
+              acceptedButtons: Qt.LeftButton | Qt.MiddleButton
               cursorShape: Qt.PointingHandCursor
-              onClicked: root.activateRow(row.modelData)
+              onClicked: function(mouse) {
+                if (mouse.button === Qt.MiddleButton) root.closeRow(row.modelData)
+                else root.activateRow(row.modelData)
+              }
             }
           }
         }
