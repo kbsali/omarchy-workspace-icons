@@ -6,6 +6,16 @@ instructions, LICENSE, documented dependencies, optional root `preview.png`, glo
 plugin id. `tjcelaya.workspace-icons` was unused in the catalog
 (https://plugins.omarchy.org/catalog.json) as of 2026-09-30.
 
+## Resume here on 2026-10-11 (the 11th), before anything else is published
+
+v0.3.0 (middle-click a panel row to close its window or stop its agent) was tagged and
+pushed at 2026-10-11 00:15 EDT. Left for later on the 11th:
+
+1. Smoke-test the real install path (below) against the pushed `main`.
+2. Promote the release through the marketplace "Plugin verification" form with the full
+   SHA of `v0.3.0`: `4cb447c9b6082c62e45007fc1f801fe3f2faed47`.
+3. Delete this section.
+
 Checks before every submission or release:
 
     omarchy plugin validate ~/src/tjcelaya/omarchy-workspace-icons
