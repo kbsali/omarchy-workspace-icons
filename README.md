@@ -18,6 +18,8 @@ collapse to one icon in the bar but each get a row in the panel.
 - Hover a workspace for a panel listing its windows; click a row to focus that window, or
   middle-click it to ask that window to close.
 - Workspaces 1–5 are always shown; others appear while they have windows.
+- With `perMonitor` on, each monitor's bar shows only the workspaces on that monitor. A
+  persistent workspace that does not exist yet shows on every bar.
 
 ## Coding agents (optional)
 
