@@ -19,7 +19,8 @@ collapse to one icon in the bar but each get a row in the panel.
   middle-click it to ask that window to close.
 - Workspaces 1–5 are always shown; others appear while they have windows.
 - With `perMonitor` on, each monitor's bar shows only the workspaces on that monitor. A
-  persistent workspace that does not exist yet shows on every bar.
+  persistent workspace that does not exist yet shows on every bar, and so does a workspace
+  Hyprland has left on a monitor without a bar (a mirror, or a disabled output).
 
 ## Coding agents (optional)
 
